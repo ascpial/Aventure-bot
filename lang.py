@@ -2,8 +2,8 @@ intro="""Bonjour !
 Je vais commencer à te conter ton RP...
 Voici les commandes :
 ```
-  regarder pour voir où tu es
-  aller <nombre> pour aller dans une pièce```
+  regarder       : voir où tu es
+  aller <nombre> : aller dans une pièce```
 """
 patron = """```
 Tu as dans {salle.nom_long} ({salle.nom}).
@@ -15,5 +15,5 @@ Tu peux aller dans :
 give_number = "Il faut donner un nombre !"
 salle_not_exists = "Tu ne peux pas aller dans cette salle, elle n'existe pas !"
 
-regarder = ["regarder"]
-aller = ["aller "]
+regarder = ["regarder", "voir"]
+aller = ["aller ", "bouge "]
