@@ -2,6 +2,7 @@ from gestionnaire import monde
 import discord
 import lang
 import os
+from my_token import token
 
 class Client(object):
     def __init__(self, user):
@@ -15,7 +16,7 @@ def get_client(user):
     for i in clients:
         if i.user_id == id:
             return i
-    clients.append(Client(user))
+    return None
 
 bot = discord.Client()
 
@@ -27,21 +28,22 @@ async def on_ready():
 async def on_message(ctx):
     if not type(ctx.channel) == discord.DMChannel:
         return
-    if ctx.content.lower() == "bonjour":
-        await ctx.channel.send("Bonjour !\nJe vais commencer à te conter ton RP...\nVoici les commandes :\n  regarder pour voir où tu es\n  aller <nombre> pour aller dans une pièce")
-    elif ctx.content.lower() == "regarder":
+    client = get_client(ctx.author)
+    if client == None:
+        await ctx.channel.send(lang.intro)
+        clients.append(Client(ctx.author))
+    elif ctx.content.lower() in lang.regarder:
         client = get_client(ctx.author)
         await ctx.channel.send(lang.patron.format(salle=client.salle))
     elif ctx.content.lower().startswith("aller "):
-        client = get_client(ctx.author)
         try:
             nombre = int(ctx.content[6:])
             if not nombre >= 0 and nombre < len(client.salle.salles):
-                await ctx.channel.send("Tu ne peux pas aller dans cette salle, elle n'existe pas !")
+                await ctx.channel.send(lang.salle_not_exists)
             else:
                 client.salle = client.salle.salles[nombre]
                 await ctx.channel.send(lang.patron.format(salle=client.salle))
         except ValueError:
-            await ctx.channel.send("Il faut donner un nombre !")
+            await ctx.channel.send(lang.give_number)
 
-bot.run(os.getenv("token"))    
+bot.run(token)    
