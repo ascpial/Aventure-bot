@@ -5,13 +5,6 @@ from my_token import token
 from utils import *
 from database import *
 
-def get_client(user):
-    id = user.id
-    for i in clients:
-        if i.user_id == id:
-            return i
-    return None
-
 bot = discord.Client()
 
 database = Database("base.db", bot)
