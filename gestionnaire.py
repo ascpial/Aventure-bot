@@ -30,9 +30,9 @@ class Couloir(Piece):
     def __repr__(self):
         return self.nom + " " + self.information
 
-monde = {"balcon":Piece("balcon","Balcon", "le balcon", "Le balcon surplombait la comapagne. En bois, assez robuste mais aussi grossier, il s'agit du genre de balcon qui inspire confiance. Malgrès ses barrières mal ajustées, tu te sent en sécuritée même avec plusieurs dizaines de mètres de dénivelé en dessous de toi.",
+monde = {"balcon":Piece("balcon","Balcon", "le balcon", "Le balcon surplombait la compagne. En bois, assez robuste mais aussi grossier, il s'agit du genre de balcon qui inspire confiance. Malgrès ses barrières mal ajustées, tu te sens en sécuritée même avec plusieurs dizaines de mètres de dénivelé en dessous de toi.",
                         "Le balcon a l'air rassurant, assez solide.", ["hall"])}
-monde["hall"]=Piece("hall", "Hall", "le hall d'entrée", """Le hall d'entrée avait trois porte : une pour aller sur le balcon, deux autres pour aller dans deux couloirs. Cette pièce, de taille modeste, donne sur le balcon, fait étonnant puisqu'il s'agit en général de la pièce qui donne sur le porche...""",
+monde["hall"]=Piece("hall", "Hall", "le hall d'entrée", """Le hall d'entrée a trois porte : une pour aller sur le balcon, deux autres pour aller dans deux couloirs. Cette pièce, de taille modeste, donne sur le balcon, fait étonnant puisqu'il s'agit en général de la pièce qui donne sur le porche...""",
                      "Le hall d'entrée, placé bizarement après le balcon, donne sur deuwsutre portes.", ["balcon", "couloir_ss", "couloir_chambres"])
 monde["couloir_ss"] = Couloir("couloir_ss", "C'est un couloir étroit et court qui mène vers une échelle descendant en dessous de la maison. Il donne aussi sur le hall.",
                               "Le couloir mène sur une échelle qui descend et au hall.",

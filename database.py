@@ -29,11 +29,15 @@ class Database(object):
         return self.conn
     def curseur(self):
         return self.connection().cursor()
-    async def get_client(self, id):
-        curseur = self.curseur().execute("select * from clients where id=%i"%id)
+    async def get_client(self, client_user):
+        curseur = self.curseur().execute("select * from clients where id=%i"%client_user.id)
         client = curseur.fetchall()
-        if len(client) == 0: pass
-        else:
-            client = Client(client[0][0], client[0][1], self.bot)
-            await client.load()
-            return client
+        if len(client) == 0: return None
+        client = Client(client[0][0], client[0][1], self.bot)
+        await client.load()
+        return client
+    def create_user(self, user):
+        self.curseur().execute("""insert into clients values (%i, "%s")"""%(user.id, 'balcon'))
+        self.connection().commit()
+        curseur = self.curseur().execute("select * from clients where id=%i"%user.id)
+        client = curseur.fetchall()
