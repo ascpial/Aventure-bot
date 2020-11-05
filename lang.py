@@ -6,7 +6,7 @@ Voici les commandes :
   aller <nombre> : aller dans une pièce```
 """
 patron = """```
-Tu as dans {salle.nom_long} ({salle.nom}).
+Tu es dans {salle.nom_long} ({salle.nom}).
 {salle.description}
 Tu peux aller dans :
 {salle.salles_str}

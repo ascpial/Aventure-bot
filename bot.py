@@ -1,16 +1,9 @@
-from gestionnaire import monde
 import discord
 import lang
 import os
 from my_token import token
 from utils import *
-
-class Client(object):
-    def __init__(self, user):
-        self.user_id = user.id
-        self.salle = monde["balcon"]
-
-clients = []
+from database import *
 
 def get_client(user):
     id = user.id
@@ -21,6 +14,8 @@ def get_client(user):
 
 bot = discord.Client()
 
+database = Database("base.db", bot)
+
 @bot.event
 async def on_ready():
     print("ready")
@@ -30,22 +25,21 @@ async def on_message(ctx):
     if not type(ctx.channel) == discord.DMChannel:
         return
     if ctx.author == bot.user: return
-    client = get_client(ctx.author)
+    client = await database.get_client(ctx.author.id)
     if client == None:
         await ctx.channel.send(lang.intro)
-        clients.append(Client(ctx.author))
+        print("Pas registré !")
     elif ctx.content.lower() in lang.regarder:
-        client = get_client(ctx.author)
         await ctx.channel.send(lang.patron.format(salle=client.salle))
     elif startswith(ctx.content.lower(), lang.aller):
         try:
             nombre = int(ctx.content[6:])
             if not nombre >= 0 and nombre < len(client.salle.salles):
-                await ctx.channel.send(lang.salle_not_exists)
+                await client.send(lang.salle_not_exists)
             else:
-                client.salle = client.salle.salles[nombre]
-                await ctx.channel.send(lang.patron.format(salle=client.salle))
+                client.set_salle(client.salle.salles[nombre])
+                await client.send(lang.patron.format(salle=client.salle))
         except ValueError:
-            await ctx.channel.send(lang.give_number)
+            await client.send(lang.give_number)
 
 bot.run(token) 
