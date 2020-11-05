@@ -46,4 +46,4 @@ async def on_message(ctx):
         except ValueError:
             await ctx.channel.send(lang.give_number)
 
-bot.run(token)    
+bot.run(TOKEN)    
