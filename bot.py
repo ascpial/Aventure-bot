@@ -28,7 +28,9 @@ async def on_message(ctx):
     elif startswith(ctx.content.lower(), lang.aller):
         try:
             nombre = int(ctx.content[6:])
-            if not nombre >= 0 and nombre < len(client.salle.salles):
+            print(nombre)
+            print(client.salle.salles)
+            if nombre < 0 or nombre >= len(client.salle.salles):
                 await client.send(lang.salle_not_exists)
             else:
                 old_salle = client.salle
