@@ -12,6 +12,7 @@ database = Database("base.db", bot)
 @bot.event
 async def on_ready():
     print("ready")
+    await bot.change_presence(activity=discord.Game(name="Envois moi un MP"))
 
 @bot.event
 async def on_message(ctx):
@@ -24,7 +25,7 @@ async def on_message(ctx):
         database.create_user(ctx.author)
         return
     elif ctx.content.lower() in lang.regarder:
-        embed = get_embed(client)
+        embed = await get_embed(client)
         await ctx.channel.send(embed = embed)
     elif startswith(ctx.content.lower(), lang.aller):
         try:
@@ -36,7 +37,7 @@ async def on_message(ctx):
             else:
                 old_salle = client.salle
                 client.set_salle(client.salle.salles[nombre])
-                embed = get_embed(client)
+                embed = await get_embed(client)
                 await client.send(embed=embed)
                 curseur = database.curseur().execute("""select id from clients where salle = "%s" """%(old_salle.id))
                 liste = curseur.fetchall()
@@ -52,6 +53,11 @@ async def on_message(ctx):
                     except: pass
         except ValueError:
             await client.send(lang.give_number)
+    elif startswith(ctx.content, lang.statut):
+        statut = del_commande(ctx.content, lang.statut)
+        client.set_statut(statut)
+    elif ctx.content in lang.statut_reset:
+        client.set_statut("")
     else:
         curseur = database.curseur().execute("""select id from clients where salle = "%s" """%(client.salle.id))
         liste = curseur.fetchall()
@@ -60,4 +66,4 @@ async def on_message(ctx):
             try: await user.send(lang.dit%(ctx.author.name, ctx.content))
             except: pass
 
-bot.run(token) 
+bot.run(token)

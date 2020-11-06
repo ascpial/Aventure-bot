@@ -2,11 +2,13 @@ import sqlite3
 from gestionnaire import monde
 
 class Client(object):
-    def __init__(self, user_id, salle, bot):
+    def __init__(self, user_id, salle, nom, statut, bot):
         self.user_id = user_id
         self.user = user_id
         if self.user == None: pass #destroy the member
         self.salle = monde[salle]
+        self.nom = nom
+        self.statut = statut
         self.bot = bot
         self.database = Database("base.db", self.bot)
     async def load(self):
@@ -18,6 +20,10 @@ class Client(object):
         self.database.connection().commit()
         self.salle = salle
         print(salle)
+    def set_statut(self, statut):
+        curseur = self.database.curseur().execute("""UPDATE "clients" SET "statut"="%s" WHERE "id"=%i"""%(statut, self.user_id))
+        self.database.connection().commit()
+        self.statut = statut
 
 class Database(object):
     def __init__(self, base, bot):
@@ -33,11 +39,11 @@ class Database(object):
         curseur = self.curseur().execute("select * from clients where id=%i"%client_user.id)
         client = curseur.fetchall()
         if len(client) == 0: return None
-        client = Client(client[0][0], client[0][1], self.bot)
+        client = Client(client[0][0], client[0][1], client[0][2], client[0][3], self.bot)
         await client.load()
         return client
     def create_user(self, user):
-        self.curseur().execute("""insert into clients values (%i, "%s")"""%(user.id, 'balcon'))
+        self.curseur().execute("""insert into clients values (%i, "%s", "%s", "")"""%(user.id, 'balcon', user.name))
         self.connection().commit()
         curseur = self.curseur().execute("select * from clients where id=%i"%user.id)
         client = curseur.fetchall()
