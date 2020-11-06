@@ -42,13 +42,13 @@ async def on_message(ctx):
                 liste = curseur.fetchall()
                 for i in liste:
                     user = await bot.fetch_user(i[0])
-                    try: await user.send("**%s** vient de partir vers *%s*"%(ctx.author.name, client.salle.nom_long))
+                    try: await user.send(lang.partir%(ctx.author.name, client.salle.nom_long))
                     except: pass
                 curseur = database.curseur().execute("""select id from clients where salle = "%s" """%(client.salle.id))
                 liste = curseur.fetchall()
                 for i in liste:
                     user = await bot.fetch_user(i[0])
-                    try: await user.send("**%s** vient d'arriver depuis *%s*"%(ctx.author.name, old_salle.nom_long))
+                    try: await user.send(lang.arriver%(ctx.author.name, old_salle.nom_long))
                     except: pass
         except ValueError:
             await client.send(lang.give_number)
@@ -57,7 +57,7 @@ async def on_message(ctx):
         liste = curseur.fetchall()
         for i in liste:
             user = await bot.fetch_user(i[0])
-            try: await user.send("**%s** a dit : %s"%(ctx.author.name, ctx.content))
+            try: await user.send(lang.dit%(ctx.author.name, ctx.content))
             except: pass
 
 bot.run(token) 

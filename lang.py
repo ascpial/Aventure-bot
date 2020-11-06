@@ -19,3 +19,6 @@ regarder = ["regarder", "voir"]
 aller = ["aller ", "bouge ", "déplacer "]
 embed_description = "Vous êtes dans {}."
 field_description = "%i : %s"
+partir = "**%s** vient de partir vers *%s*"
+arriver = "**%s** vient d'arriver depuis *%s*"
+dit = "**%s** a dit : %s"
