@@ -24,10 +24,11 @@ async def on_message(ctx):
         database.create_user(ctx.author)
         return
     elif ctx.content.lower() in lang.regarder:
-        await ctx.channel.send(lang.patron.format(salle=client.salle))
+        embed = get_embed(client)
+        await ctx.channel.send(embed = embed)
     elif startswith(ctx.content.lower(), lang.aller):
         try:
-            nombre = int(ctx.content[6:])
+            nombre = int(del_commande(ctx.content, lang.aller))
             print(nombre)
             print(client.salle.salles)
             if nombre < 0 or nombre >= len(client.salle.salles):
@@ -35,7 +36,8 @@ async def on_message(ctx):
             else:
                 old_salle = client.salle
                 client.set_salle(client.salle.salles[nombre])
-                await client.send(lang.patron.format(salle=client.salle))
+                embed = get_embed(client)
+                await client.send(embed=embed)
                 curseur = database.curseur().execute("""select id from clients where salle = "%s" """%(old_salle.id))
                 liste = curseur.fetchall()
                 for i in liste:
