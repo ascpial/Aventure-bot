@@ -14,10 +14,6 @@ class Piece(object):
         for nom in self.salles:
             liste.append(monde[nom])
         self.salles = liste
-        self.salles_str = ""
-        for numero, salle in enumerate(self.salles):
-            self.salles_str += str(numero)+" : "+salle.nom+"\n"
-        self.salles_str = self.salles_str[:-1]
 
 class Couloir(Piece):
     nom = "Couloir"

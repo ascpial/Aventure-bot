@@ -4,6 +4,7 @@ import os
 from my_token import token
 from utils import *
 from database import *
+import salles_gestionnaire
 
 bot = discord.Client()
 
@@ -30,8 +31,6 @@ async def on_message(ctx):
     elif startswith(ctx.content.lower(), lang.aller):
         try:
             nombre = int(del_commande(ctx.content, lang.aller))
-            print(nombre)
-            print(client.salle.salles)
             if nombre < 0 or nombre >= len(client.salle.salles):
                 await client.send(lang.salle_not_exists)
             else:
@@ -58,6 +57,11 @@ async def on_message(ctx):
         client.set_statut(statut)
     elif ctx.content in lang.statut_reset:
         client.set_statut("")
+    elif ctx.content == "reload" and ctx.author.id == 638313144241881093:
+        monde_reload = salles_gestionnaire.Salles()
+        salles_gestionnaire.creer_salles("salles", monde_reload)
+        monde_reload.create()
+        database.monde = monde_reload
     else:
         curseur = database.curseur().execute("""select id from clients where salle = "%s" """%(client.salle.id))
         liste = curseur.fetchall()
