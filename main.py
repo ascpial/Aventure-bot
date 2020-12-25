@@ -8,7 +8,7 @@ import salles_gestionnaire
 
 bot = discord.Client()
 
-database = Database("base.db", bot)
+database = Database("/var/database/aventure.db", bot)
 
 @bot.event
 async def on_ready():
@@ -25,10 +25,10 @@ async def on_message(ctx):
         await ctx.channel.send(lang.intro)
         database.create_user(ctx.author)
         return
-    elif ctx.content.lower() in lang.regarder:
+    elif ctx.content.lower().strip() in lang.regarder:
         embed = await get_embed(client)
         await ctx.channel.send(embed = embed)
-    elif startswith(ctx.content.lower(), lang.aller):
+    elif startswith(ctx.content.lower().strip(), lang.aller):
         try:
             nombre = int(del_commande(ctx.content, lang.aller))
             if nombre < 0 or nombre >= len(client.salle.salles):
@@ -38,17 +38,11 @@ async def on_message(ctx):
                 client.set_salle(client.salle.salles[nombre])
                 embed = await get_embed(client)
                 await client.send(embed=embed)
-                curseur = database.curseur().execute("""select id from clients where salle = "%s" """%(old_salle.id))
-                liste = curseur.fetchall()
-                for i in liste:
-                    user = await bot.fetch_user(i[0])
-                    try: await user.send(lang.partir%(ctx.author.name, client.salle.nom_long))
+                async for i in joueurs_in(old_salle, database):
+                    try: await i.send(lang.partir%(ctx.author.name, client.salle.nom_long))
                     except: pass
-                curseur = database.curseur().execute("""select id from clients where salle = "%s" """%(client.salle.id))
-                liste = curseur.fetchall()
-                for i in liste:
-                    user = await bot.fetch_user(i[0])
-                    try: await user.send(lang.arriver%(ctx.author.name, old_salle.nom_long))
+                async for i in joueurs_in(client.salle, database):
+                    try: await i.send(lang.arriver%(ctx.author.name, old_salle.nom_long))
                     except: pass
         except ValueError:
             await client.send(lang.give_number)
@@ -63,10 +57,7 @@ async def on_message(ctx):
         monde_reload.create()
         database.monde = monde_reload
     else:
-        curseur = database.curseur().execute("""select id from clients where salle = "%s" """%(client.salle.id))
-        liste = curseur.fetchall()
-        for i in liste:
-            user = await bot.fetch_user(i[0])
+        async for user in joueurs_in(client.salle, database):
             try: await user.send(lang.dit%(ctx.author.name, ctx.content))
             except: pass
 
