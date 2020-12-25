@@ -1,5 +1,6 @@
 import sqlite3
 from salles_gestionnaire import *
+from discord import User
 
 monde = Salles()
 creer_salles("salles", monde)
@@ -14,7 +15,7 @@ class Client(object):
         self.nom = nom
         self.activity = activity
         self.bot = bot
-        self.database = Database("base.db", self.bot)
+        self.database = Database("/var/database/aventure.db", self.bot)
     async def load(self):
         self.user = self.bot.get_user(self.user)
     async def send(self, *args, **kwargs):
@@ -39,7 +40,9 @@ class Database(object):
     def curseur(self):
         return self.connection().cursor()
     async def get_client(self, client_user):
-        curseur = self.curseur().execute("select * from clients where id=%i"%client_user.id)
+        if type(client_user) == User or client_user == Client:
+            client_user = client_user.id
+        curseur = self.curseur().execute("select * from clients where id=%i"%client_user)
         client = curseur.fetchall()
         if len(client) == 0: return None
         client = Client(client[0][0], client[0][1], client[0][2], client[0][3], self.bot)
