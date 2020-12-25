@@ -16,8 +16,8 @@ Tu peux aller dans :
 give_number = "Il faut donner un nombre !"
 salle_not_exists = "Tu ne peux pas aller dans cette salle, elle n'existe pas !"
 
-regarder = ["regarder", "voir"]
-aller = ["aller ", "bouge ", "déplacer "]
+regarder = ["regarder", "voir","ls"]
+aller = ["aller ", "bouge ", "déplacer ", "cd "]
 embed_description = "Vous êtes dans {}.\n{}"
 field_description = "%i : %s"
 partir = "**%s** vient de partir vers *%s*"
@@ -27,3 +27,4 @@ connectes = "Joueurs dans cet endroit :"
 statut = ["status ", "je fait "]
 statut_reset = ["reset_status", "status"]
 connectes_statut = "%s : %s"
+pas_connectes = "Pas de joueurs dans cette pièce !"
