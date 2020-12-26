@@ -4,3 +4,4 @@ salles/
 my_token.py
 __pycache__/
 .vscode/
+*.log
