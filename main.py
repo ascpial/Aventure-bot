@@ -6,6 +6,10 @@ from utils import *
 from database import *
 import salles_gestionnaire
 
+import logging
+import logging.config
+logging.basicConfig(filename='logs.log', level=logging.INFO, format='%(levelname)s - %(name)s - %(asctime)s - %(message)s')
+
 bot = discord.Client()
 
 database = Database("/var/database/aventure.db", bot)
@@ -24,10 +28,12 @@ async def on_message(ctx):
     if client == None:
         await ctx.channel.send(lang.intro)
         database.create_user(ctx.author)
+        logging.info(f"User id {ctx.author.id} join")
         return
     elif ctx.content.lower().strip() in lang.regarder:
         embed = await get_embed(client)
         await ctx.channel.send(embed = embed)
+        logging.info(f"User Id {client.user_id} seen in {client.salle.id}")
     elif startswith(ctx.content.lower().strip(), lang.aller):
         try:
             nombre = int(del_commande(ctx.content, lang.aller))
@@ -36,6 +42,7 @@ async def on_message(ctx):
             else:
                 old_salle = client.salle
                 client.set_salle(client.salle.salles[nombre])
+                logging.info(f"User Id {client.user_id} moved from {old_salle.id} to {client.salle.id}")
                 embed = await get_embed(client)
                 await client.send(embed=embed)
                 async for i in joueurs_in(old_salle, database):
@@ -60,5 +67,6 @@ async def on_message(ctx):
         async for user in joueurs_in(client.salle, database):
             try: await user.send(lang.dit%(ctx.author.name, ctx.content))
             except: pass
+        logging.info(f"User Id {client.user_id} send \"{ctx.content}\" in {client.salle.id}")
 
 bot.run(token)
