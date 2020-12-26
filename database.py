@@ -1,5 +1,5 @@
 import sqlite3
-from salles_gestionnaire import *
+from salles_gestionnaire import creer_salles, Salles
 from discord import User
 
 monde = Salles()
@@ -21,11 +21,11 @@ class Client(object):
     async def send(self, *args, **kwargs):
         await self.user.send(*args, **kwargs)
     def set_salle(self, salle):
-        curseur = self.database.curseur().execute("""UPDATE "clients" SET "salle"="%s" WHERE "id"=%i"""%(salle.id, self.user_id))
+        self.database.curseur().execute("""UPDATE "clients" SET "salle"="%s" WHERE "id"=%i"""%(salle.id, self.user_id))
         self.database.connection().commit()
         self.salle = salle
     def set_statut(self, statut):
-        curseur = self.database.curseur().execute("""UPDATE "clients" SET "activity"="%s" WHERE "id"=%i"""%(statut, self.user_id))
+        self.database.curseur().execute("""UPDATE "clients" SET "activity"="%s" WHERE "id"=%i"""%(statut, self.user_id))
         self.database.connection().commit()
         self.statut = statut
 
@@ -52,4 +52,4 @@ class Database(object):
         self.curseur().execute("""insert into clients values (%i, "%s", "%s", "")"""%(user.id, 'salles/maison/balcon.json', user.name))
         self.connection().commit()
         curseur = self.curseur().execute("select * from clients where id=%i"%user.id)
-        client = curseur.fetchall()
+        curseur.fetchall()
