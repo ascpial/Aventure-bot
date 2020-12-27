@@ -1,7 +1,7 @@
 import discord
 import lang
 import os
-from my_token import token
+from configuration import token
 from utils import *
 from database import Database
 import salles_gestionnaire
