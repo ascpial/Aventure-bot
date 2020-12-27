@@ -69,4 +69,4 @@ async def on_message(ctx):
             except: pass
         logging.info(f"User Id {client.user_id} send \"{ctx.content}\" in {client.salle.id}")
 
-bot.run(token)
+bot.run(TOKEN)
