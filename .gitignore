@@ -1,7 +1,7 @@
 *.db
 functions/
 salles/
-my_token.py
+configuration.py
 __pycache__/
 .vscode/
 *.log
